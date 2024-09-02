@@ -7,14 +7,15 @@ from langchain_core.messages.ai import AIMessage
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompt_values import StringPromptValue
 from langchain_core.prompts import ChatPromptTemplate
-from langchain_openai import ChatOpenAI
+#from langchain_openai import ChatOpenAI
+from langchain_google_genai import ChatGoogleGenerativeAI
 from lib_resume_builder_AIHawk.config import global_config
 load_dotenv()
 
 
 class LLMLogger:
     
-    def __init__(self, llm: ChatOpenAI):
+    def __init__(self, llm: ChatGoogleGenerativeAI):
         self.llm = llm
 
     @staticmethod
@@ -72,7 +73,7 @@ class LLMLogger:
 
 class LoggerChatModel:
 
-    def __init__(self, llm: ChatOpenAI):
+    def __init__(self, llm: ChatGoogleGenerativeAI):
         self.llm = llm
 
     def __call__(self, messages: List[Dict[str, str]]) -> str:
@@ -108,10 +109,11 @@ class LoggerChatModel:
 
 
 class LLMResumer:
-    def __init__(self, openai_api_key, strings):
+    def __init__(self, GOOGLE_API_KEY, strings):
+        gemini_models = ['gemini-1.5-flash', 'gemini-1.5-pro']
         self.llm_cheap = LoggerChatModel(
-            ChatOpenAI(
-                model_name="gpt-4o-mini", openai_api_key=openai_api_key, temperature=0.8
+            ChatGoogleGenerativeAI(
+                model_name=gemini_models[0], GOOGLE_API_KEY=GOOGLE_API_KEY, temperature=0.8
             )
         )
         self.strings = strings

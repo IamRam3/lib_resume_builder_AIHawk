@@ -11,9 +11,12 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompt_values import StringPromptValue
 from langchain_core.prompts import ChatPromptTemplate, PromptTemplate
 from langchain_core.runnables import RunnablePassthrough
-from langchain_openai import ChatOpenAI
+#from langchain_openai import ChatOpenAI
+import google.generativeai as genai
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_text_splitters import TokenTextSplitter
-from langchain_community.embeddings import OpenAIEmbeddings
+#from langchain_community.embeddings import OpenAIEmbeddings
+from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_community.vectorstores import FAISS
 from lib_resume_builder_AIHawk.config import global_config
 from dotenv import load_dotenv
@@ -23,7 +26,7 @@ load_dotenv()
 
 class LLMLogger:
     
-    def __init__(self, llm: ChatOpenAI):
+    def __init__(self, llm: ChatGoogleGenerativeAI):
         self.llm = llm
 
     @staticmethod
@@ -81,7 +84,7 @@ class LLMLogger:
 
 class LoggerChatModel:
 
-    def __init__(self, llm: ChatOpenAI):
+    def __init__(self, llm: ChatGoogleGenerativeAI):
         self.llm = llm
 
     def __call__(self, messages: List[Dict[str, str]]) -> str:
@@ -114,9 +117,12 @@ class LoggerChatModel:
 
 
 class LLMResumeJobDescription:
-    def __init__(self, openai_api_key, strings):
-        self.llm_cheap = LoggerChatModel(ChatOpenAI(model_name="gpt-4o-mini", openai_api_key=openai_api_key, temperature=0.8))
-        self.llm_embeddings = OpenAIEmbeddings(openai_api_key=openai_api_key)
+    def __init__(self, GOOGLE_API_KEY, strings):
+        gemini_models = ['gemini-1.5-flash', 'gemini-1.5-pro']
+        os.getenv("GOOGLE_API_KEY")
+        genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+        self.llm_cheap = LoggerChatModel(ChatGoogleGenerativeAI(model_name=gemini_models[0], temperature=0.4))
+        self.llm_embeddings = GoogleGenerativeAIEmbeddings(model = "models/embedding-001")
         self.strings = strings
 
     @staticmethod

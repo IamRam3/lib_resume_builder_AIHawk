@@ -17,7 +17,9 @@ setup(
         'langchain-openai',
         'langchain-text-splitters',
         'langsmith',
-        'openai',
+        'openai'
+        'google-generativeai',
+        'langchain_google_genai',
         'regex==2024.7.24',
         'selenium==4.9.1',
         'webdriver-manager==4.0.2',
